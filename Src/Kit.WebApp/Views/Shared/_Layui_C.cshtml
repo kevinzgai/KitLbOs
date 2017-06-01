@@ -1,4 +1,5 @@
 ﻿@using Kit.Common
+@using Kit.WebApp.Lang
 <!DOCTYPE html>
 <html>
 <head>
@@ -123,50 +124,49 @@
     <ul class="layui-nav">
         <a href="" class="logo"><img src="~/Content/Image/u3.png" height="40" alt="Alternate Text" /></a>
         <li class="layui-nav-item layui-this" style="margin-left:250px;">
-            <a href="javascript:;">产品管理</a>
+            <a href="javascript:;">@Html.Lang("PageHeader-productManage")</a>
             <dl class="layui-nav-child">
                 <dd>
-                    @Html.ActionLink("添加产品", "addproduct", "Products")
+                    @Html.ActionLink(@Html.Lang("PageHeader-productAdd"), "addproduct", "Products")
                 </dd>
-                <dd>@Html.ActionLink("产品列表", "Index/", "Products")</dd>
+                <dd>@Html.ActionLink(@Html.Lang("PageHeader-productlist"), "Index/", "Products")</dd>
             </dl>
         </li>
         <li class="layui-nav-item">
-            <a href="javascript:;">系统设置</a>
+            <a href="javascript:;">@Html.Lang("sys-sets")</a>
             <dl class="layui-nav-child">
                 <dd>
-                    @Html.ActionLink("标签格式管理", "AddLableRole", "SystemSet")
+                    @Html.ActionLink(@Html.Lang("PageHeader-lbroleset"), "AddLableRole", "SystemSet")
                 </dd>
               
             </dl>
         </li>
         <li class="layui-nav-item">
-            @Html.ActionLink("用户管理", "GetAccount", "Account")
+            @Html.ActionLink(@Html.Lang("PageHeader-userset"), "GetAccount", "Account")
         </li>
 
         <li class="layui-nav-item">
-            @Html.ActionLink("图标管理", "HomeIconList", "SystemSet")
+            @Html.ActionLink(@Html.Lang("PageHeader-iconset"), "HomeIconList", "SystemSet")
         </li>
         
         <li class="layui-nav-item">
-            @Html.ActionLink("系统日志", "Index/", "SysLog")
+            @Html.ActionLink(@Html.Lang("PageHeader-loglist"), "Index/", "SysLog")
         </li>
         <li class="layui-nav-item">
-            Cuser
+            Cuser @Html.Lang("")
         </li>
 
         <li class="layui-nav-item " style="float:right">
             <a href="javascript:;">@ViewBag.User.UEmail</a>
             <dl class="layui-nav-child">
                 <dd>
-                    @Html.ActionLink("安全退出", "login", "Account")
+                    @Html.ActionLink(@html.lang("Login-out"), "login", "Account")
                 </dd>
             </dl>
         </li>
         <li class="layui-nav-item " style="float:right">
-            <label for="lang">选择语言</label><select name="lang">
+            <label for="lang">@html.lang("PageHeader-language-Set")</label><select name="lang">
                 <option value="CN">中文</option>
-
                 <option value="EN">English</option>
             </select>
         </li>
@@ -204,11 +204,11 @@
             $(".layui-form").serialize(),
             function (any, jqxhr) {
                 if (any.name != "") {
-                    layer.alert("添加成功！");
+                    layer.alert("@html.lang("msg-add-ok")");
                     window.location.href = "/Products/Index/?Pnumber=" + any.Pnumber;
                 }
                 else {
-                    layer.alert("添加失败！");
+                      layer.alert("@html.lang("msg-add-fail")");
                 }
 
             });

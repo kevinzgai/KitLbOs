@@ -126,10 +126,10 @@
     <ul class="layui-nav">
         <a href="" class="logo"><img src="~/Content/Image/u3.png" height="40" alt="Alternate Text" /></a>
         <li class="layui-nav-item" style="margin-left:250px;">
-            @Html.ActionLink("标签管理", "Index/", "Products")
+            @Html.ActionLink(html.lang("PageHeader-lbset"), "Index/", "Products")
         </li>
         <li class="layui-nav-item">
-            @Html.ActionLink("产品查看", "Index/", "Products")
+            @Html.ActionLink(html.lang("PageHeader-productlist"), "Index/", "Products")
         </li>
 
         <li class="layui-nav-item">
@@ -140,12 +140,12 @@
             <a href="javascript:;">@ViewBag.User.UEmail</a>
             <dl class="layui-nav-child">
                 <dd>
-                    @Html.ActionLink("安全退出", "login", "Account")
+                    @Html.ActionLink(html.lang("PageHeader-Login-ok"), "login", "Account")
                 </dd>
             </dl>
         </li>
         <li class="layui-nav-item " style="float:right">
-            <label for="lang">选择语言</label><select name="lang">
+            <label for="lang">@html.lang("PageHeader-language-Set")</label><select name="lang">
                 <option value="CN">中文</option>
 
                 <option value="EN">English</option>
@@ -185,11 +185,11 @@
             $(".layui-form").serialize(),
             function (any, jqxhr) {
                 if (any.name != "") {
-                    layer.alert("添加成功！");
+                    layer.alert("@html.lang("msg-add-ok")");
                     window.location.href = "/Products/Index/?Pnumber=" + any.Pnumber;
                 }
                 else {
-                    layer.alert("添加失败！");
+                      layer.alert("@html.lang("msg-add-fail")");
                 }
 
             });

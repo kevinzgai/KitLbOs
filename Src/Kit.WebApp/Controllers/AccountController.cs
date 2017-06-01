@@ -53,6 +53,7 @@ namespace Kit.WebApp.Controllers
                     Session["User"] = drow;
                     Response.Cookies["Lang"].Value = drow.Ulang.Trim();
                     Response.Cookies["userName"].Expires = DateTime.Now.AddMonths(1);
+                    Session["Lang"] = drow.Ulang.Trim()=="CN"?Lang.LangType.cn:Lang.LangType.en;
                     strjson.Append("{\"result\":\"0\",\"msg\":\"登录成功！\"}");
                 }
                 else

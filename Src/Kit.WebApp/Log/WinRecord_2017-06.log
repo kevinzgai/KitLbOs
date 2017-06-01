@@ -1,0 +1,6 @@
+2017-06-01 19:33:15:522        System.ArgumentException: 指定的资源名称“”在资源文件中不存在。
+   在 System.Resources.ResourceReader.GetResourceData(String resourceName, String& resourceType, Byte[]& resourceData)
+   在 Kit.WebApp.Lang.LangResourceFileProvider.GetLangString(String Key, LangType langtype, String FilePath) 位置 E:\ProjectManage\KitLbOs\Src\Kit.WebApp\Controllers\ClassHelper\LocalizationHelpers.cs:行号 83
+2017/06/01 19:36:06:456        System.ArgumentException: 指定的资源名称“”在资源文件中不存在。
+   在 System.Resources.ResourceReader.GetResourceData(String resourceName, String& resourceType, Byte[]& resourceData)
+   在 Kit.WebApp.Lang.LangResourceFileProvider.GetLangString(String Key, LangType langtype, String FilePath) 位置 E:\ProjectManage\KitLbOs\Src\Kit.WebApp\Controllers\ClassHelper\LocalizationHelpers.cs:行号 83
