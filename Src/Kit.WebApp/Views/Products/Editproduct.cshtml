@@ -1,0 +1,70 @@
+﻿@model Kit.Model.KProduce
+
+@{
+    ViewBag.Title = "Editproduct";
+    Layout = "~/Views/Shared/_Layui.cshtml";
+}
+
+<div class="site-text site-block" style="width:80%;  margin:0 auto;">
+    @using (Html.BeginForm("Editproductaction", "Products", FormMethod.Post, new { @class = "layui-form" }))
+    {
+        <fieldset class="layui-elem-field layui-field-title" style="margin-top: 50px;">
+            <legend>添加产品</legend>
+        </fieldset>
+        <div class="layui-form-item">
+            <label class="layui-form-label">产品名称</label>
+            <div class="layui-input-block">
+                <input type="hidden" name="pid" value="@ViewBag.MProduct.Pid" />
+                <input type="text" name="P_name" required="" value="@ViewBag.MProduct.Pname" lay-verify="required" placeholder="请输入标题" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">产品编号</label>
+            <div class="layui-input-block">
+                <input type="text" name="P_num" required="" value="@ViewBag.MProduct.Pnumber" lay-verify="required" placeholder="请输入编号" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">产品介绍</label>
+            <div class="layui-input-block">
+                <textarea name="P_desc" placeholder="请输入内容" class="layui-textarea">@ViewBag.MProduct.Spare1</textarea>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">产品图片</label>
+            <div class="layui-input-block">
+                <div>
+                    <img src="~/Content/Image/timg.jpg" id="layimg" width="200" />
+                    <input type="hidden" id="newpicurl" name="newpicurl" value="@ViewBag.MProduct.Pimg" />
+                </div>
+                <input type="file" name="pfile" class="layui-upload-file">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button type="button" class="layui-btn" lay-submit id="btn_add">立即提交</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    }
+</div>
+<script>
+    $(function() {
+        $(".layui-input-block img").attr("src", $("#newpicurl").val());
+        console.log($("#newpicurl").val());
+    });
+    //上传图片
+    layui.upload({
+        url: '/public/Upload'
+        , before: function (input) {
+            //返回的参数item，即为当前的input DOM对象
+            console.log('文件上传中');
+            layer.msg("文件上传中。。。");
+        }
+        , success: function (res) {
+            $(".layui-input-block img").attr("src", res.pic);
+            $("#newpicurl").val(res.pic);
+            layer.msg("上传完毕");
+        }
+    });
+</script>

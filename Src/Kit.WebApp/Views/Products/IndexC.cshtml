@@ -1,0 +1,156 @@
+﻿@using Kit.Common
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layui_C.cshtml";
+
+}
+<div class="site-text site-block" style="width: 80%; margin: 0 auto;">
+
+    <span></span>
+    @using (Html.BeginForm("addproductaction", "Products", FormMethod.Post, new { @class = "layui-form" }))
+    {
+        <fieldset class="layui-elem-field layui-field-title" style="margin-top: 50px;">
+            <legend>产品综合管理</legend>
+        </fieldset>
+        <div class="layui-form-item" style="padding-left: 70%">
+            <div class="layui-input-inline">
+                <input type="text" name="password" required="" id="searchval" placeholder="请输入编号或者产品名称" autocomplete="on" class="layui-input">
+            </div>
+            <div class="">
+                <input type="button" name="serach" id="btn_serach" class="layui-btn" value="搜索">
+            </div>
+        </div>
+        @*<div class="layui-form-item">
+                <img src="~/Content/Image/timg.jpg" style="width:20%; float:left" />
+                <div style="width:50%; float:left; padding-left:2%;">
+                    <label>产品名称：</label>产品1<br />
+                    <label>产品编号：</label>GB131-414<br />
+                    <label>产品介绍：</label><p>
+                        <small>
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean euismod bibendum laoreet. Proin gravida dolor sit amet lacus accumsan et viverra justo commod....
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean euismod bibendum laoreet. Proin gravida dolor sit amet lacus accumsan et viverra justo commod.....
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean euismod bibendum laoreet. Proin gravida dolor sit amet lacus accumsan et viverra justo commod....
+                        </small>
+                    </p>
+
+                </div>
+                <div>
+                    <input type="button" class="layui-btn layui-btn-danger" name="name" value="添加标签" />
+                </div>
+                <table class="layui-table" lay-skin="line">
+                    <colgroup>
+                        <col width="20">
+                        <col width="150">
+                        <col width="250">
+                        <col width="30">
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th>序号</th>
+                            <th>标签标题</th>
+                            <th>标签内容</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>张爱玲</td>
+                            <td>于千万人之中遇见你所遇见的人，于千万年之中，时间的无涯的荒野里…</td>
+                            <td>汉族</td>
+                            <td><i class="layui-icon">&#xe642;</i><i class="layui-icon">&#xe640;</i></td>
+                        </tr>
+                        <tr>
+                            <td>Helen Keller</td>
+                            <td> Life is either a daring adventure or nothing.</td>
+                            <td>拉丁美裔</td>
+                            <td><i class="layui-icon">&#xe642;</i><i class="layui-icon">&#xe640;</i></td>
+                        </tr>
+                        <tr>
+                            <td>岳飞</td>
+                            <td>教科书再滥改，也抹不去“民族英雄”的事实</td>
+                            <td>汉族</td>
+                            <td><i class="layui-icon">&#xe642;</i><i class="layui-icon">&#xe640;</i></td>
+                        </tr>
+                        <tr>
+                            <td>孟子</td>
+                            <td>猿强，则国强。国强，则猿更强！ </td>
+                            <td>华夏族（汉族）</td>
+                            <td><i class="layui-icon">&#xe642;</i><i class="layui-icon">&#xe640;</i></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>*@
+        @Html.Raw(ViewBag.prolisthtml)
+        @*<div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit="" lay-filter="formDemo">立即提交</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+            </div>*@
+    }
+</div>
+<script type="text/javascript">
+    $("#btn_serach").bind("click",
+        function () {
+            window.location.href = "../../Products/index/?Pnumber=" + $("#searchval").val();
+        });
+    var btn = {
+        AddlableRole: function (Proid) {
+            var url = "../../ProductRole/AddRole?pid=" + Proid;
+            location.href = url;
+            //layer.msg(url);
+        }, EditProduct: function (Pid) {
+            // layer.msg("Edit" + Pid);
+            window.location.href = "../../Products/Editproduct/" + Pid;
+        }, AddlableRoleLog: function (pid, lid) {
+            var strurl = "../../LabelRoleLog?id=" + pid + "&lid=" + lid;
+            layer.open({
+                title: "添加管理标签记录",
+                type: 2,
+                anim: 2,
+                scrollbar: false,
+                shade: 0.5,
+                content: strurl, //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
+                Boolean: true,
+                resize: true,
+                area: ["80%", "80%"],
+                maxmin: true,
+                cancel: function (index, layero) {
+                    layer.confirm("确定要关闭么?如果暂时不用可以最小化当前页面哦！", function () {
+                        layer.close(index);
+                        layer.closeAll('dialog'); //关闭信息框
+
+                    }, function () {
+                        layer.msg("取消");
+                    },
+                        { icon: 6 });
+                    //if (confirm('')) { //只有当点击confirm框的确定时，该层才会关闭
+                    //    layer.close(index)
+                    //}
+                    return false;
+                }
+            });
+        }
+    }
+    var tool = {
+        del: function (lid) {
+            layer.msg(lid);//删除
+            layer.confirm("确定要删除吗?", function () {
+                tool.ajaxget("../../ProductRole/editlabelrole?type=del&lid=" + lid, function (msg) {
+                    msg = $.parseJSON(msg);
+                    if (msg.result > 0)
+                        layer.msg("删除成功");
+                    location.reload();
+                });
+            });
+
+        },
+        edit: function (lid) {
+            layer.msg(lid);//编辑
+        },
+        ajaxget: function (url, fun) {
+            $.get(url, fun);
+        }
+    }
+</script>

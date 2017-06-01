@@ -1,0 +1,10 @@
+﻿<Properties StartupConfiguration="{5B535162-10C2-4238-BC56-193B968E1834}|">
+  <MonoDevelop.Ide.ItemProperties.Kit.Web PreferredExecutionTarget="Liebao.URL" />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|.NET" />
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.Workbench />
+  <MultiItemStartupConfigurations />
+</Properties>

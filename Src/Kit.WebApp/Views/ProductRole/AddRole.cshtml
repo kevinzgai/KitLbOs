@@ -1,0 +1,179 @@
+﻿@model Kit.Model.KlableroleBase
+
+@{
+    ViewBag.Title = "AddRole";
+    Layout = "~/Views/Shared/_Layui.cshtml";
+}
+<script type="text/javascript" src="~/Content/layui/lay/modules/form.js"></script>
+
+<div class="site-text site-block" style="width: 80%; margin: 0 auto; height:800px;">
+    <div class="role_left_div">
+        <fieldset class="layui-elem-field layui-field-title" style="margin-top: 50px; float: left">
+            <legend>添加标签规则</legend>
+        </fieldset>
+        @Html.AntiForgeryToken()
+
+        <div class="layui-form-item ">
+            <label class="layui-form-label">标签名称</label>
+            <div class="layui-input-block">
+                <input type="text" name="Lname" id="Lname" required="" lay-verify="required" placeholder="请输入标题" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item ">
+            <label class="layui-form-label">标签内容</label>
+            <div class="layui-input-block">
+                <input type="text" name="Lcontent" id="Lcontent" required="" lay-verify="required" placeholder="请输入标题" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item ">
+            <label class="layui-form-label">标签内容说明</label>
+            <div class="layui-input-block">
+                <textarea placeholder="请输入内容" name="Lcontentsate" id="Lcontentsate" class="layui-textarea"></textarea>
+            </div>
+        </div>
+        <div class="layui-form-item ">
+            <label class="layui-form-label">标签示意图</label>
+            <div class="layui-input-block">
+                <img src="~/Content/Image/timg.jpg" id="lableimg" alt="please select you lable role " width="50%" style="max-height: 200px; width: 250px" />
+                <input type="file" name="pfile" lay-ext="jpg|png|gif" class="layui-upload-file" lay-title="请上传一张图片吧亲">
+                <input type="hidden" id="newpicurl" name="name" value="" />
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">标签类型</label>
+            <div class="layui-input-block">
+                <select name="Llabletypeid" id="Llabletypeid" lay-verify="required" class="layui-input">
+                    <option value="0" selected>无</option>
+                    @{
+                        foreach (var @lbitem in @ViewBag.MSysSet)
+                        {
+                            <option value="@lbitem.Sid">@lbitem.Sname</option>
+                        }
+                    }
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">循环规则</label>
+            <div class="layui-input-block">
+                <div class="layui-input" id="looprol" style="border: none">
+                    <input type="radio" name="loop" value="0" checked="checked" title="null">无&nbsp;&nbsp;&nbsp;
+                    <input type="radio" name="loop" value="1" title="year">年&nbsp;&nbsp;&nbsp;
+                    <input type="radio" name="loop" value="2" title="moth">月&nbsp;&nbsp;&nbsp;
+                    <input type="radio" name="loop" value="3" title="moth">周&nbsp;&nbsp;&nbsp;
+                    <input type="radio" name="loop" value="4" title="moth">自定义循环 <input type="text" name="name" id="loopname" value="" style="width: 250px;  padding:10px 5px; border-radius:5px; border: 1px solid #e6e6e6;" />
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item ">
+            <label class="layui-form-label">标签长度</label>
+            <div class="layui-input-block">
+                <input type="text" name="L_des" required="" id="Startloopnum" lay-verify="required" placeholder="说明：只需要输入起始数字即可.例如：0001   只会生成0001-9999之间的数字" autocomplete="On" class="layui-input">
+            </div>
+        </div>
+        <div class="text-center ">
+            <input type="button" name="btn_add" id="btn_add" lay-verify="required" value="添加标签" style="margin-left: 35%" class="layui-btn  layui-btn-warm">
+        </div>
+
+
+
+        <div>
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    </div>
+    <div class="role_right_div">
+        <div class="product_role_msg">
+            <h3>产品: @ViewBag.Kproduct.Pname</h3>
+            <img src="@ViewBag.Kproduct.Pimg" style="width: 80%; margin: 0 auto;" alt="Alternate Text" />
+            <p>
+                编号：@ViewBag.Kproduct.Pnumber
+            </p>
+            <p>
+                说明：<br />
+                &nbsp;&nbsp;&nbsp;@ViewBag.Kproduct.Spare1
+            </p>
+        </div>
+    </div>
+
+    <input type="hidden" id="Pid" name="name" value="@ViewBag.Kproduct.Pid" />
+
+</div>
+<script type="text/javascript">
+    layui.use(['layer', 'form', 'element'],
+        function() {
+            var layer = layui.layer, form = layui.form(), element = layui.element();
+
+            //……
+            //你的代码都应该写在这里面
+            $(function() {
+                $("#looprol input[name='loop']").bind("click",
+                    function() {
+                        //  layer.msg($("input[name='loop'][checked]").val());
+                        console.log($(this).val());
+                    });
+            });
+
+
+            //上传图片
+            layui.upload({
+                url: '../public/Uploadlableimg',
+                before: function(input) {
+                    //返回的参数item，即为当前的input DOM对象
+                    console.log('文件上传中');
+                    layer.msg("文件上传中。。。");
+                },
+                success: function(res) {
+                    $("#lableimg").attr("src", res.src);
+                    $("#newpicurl").val(res.src);
+                    layer.msg("上传完毕");
+                    console.log(res);
+                }
+            });
+
+            $("#btn_add").bind("click",
+                function() {
+                    var Llabletypeid = $("#Llabletypeid").val();
+                    var Llabletypename = $("#Llabletypeid").find("option:selected").text();
+                    var looprol = $("#looprol input[type='radio']:checked").val();
+                    if (looprol == 4) {
+                        if ($("#loopname").val().length < 1) {
+                            layer.msg("请输入自定义循环名称");
+                            return false;
+                        }
+
+                    }
+                    // console.log(Llabletypeval + Llabletypename);
+                    var data = {
+                        pid: @ViewBag.Kproduct.Pid,
+                        Lname: $("#Lname").val(),
+                        Lcontent: $("#Lcontent").val(),
+                        Lcontentsate: $("#Lcontentsate").val(),
+                        Llabletypeid: Llabletypeid,
+                        Llabletypename: Llabletypename,
+                        LlableImg: $("#newpicurl").val(),
+                        Llableloopid: looprol,
+                        LProductid: @ViewBag.Kproduct.Pid,
+                        Llableloopname: $("#loopname").val(),
+                        Startloopnum: $("#Startloopnum").val()
+                    };
+
+                    $.post("../ProductRole/AddRoleaction",
+                        data,
+                        function(result) {
+                            console.log(result);
+                            if (result != null) {
+                                layer.msg("添加成功");
+                                location.href = "../../Products/index/?Pnumber=" + result.Pnumber;
+                                //return false;
+                            } else {
+                                layer.msg("添加失败<br/>" + result.error);
+                                return false;
+                            }
+
+                        });
+                });
+
+
+        });
+
+</script>

@@ -1,0 +1,155 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layuidomnull.cshtml";
+}
+<style>
+    body {
+        overflow: auto !important;
+    }
+</style>
+<h1>C</h1>
+<div class="layui-form-item product-item" style="margin: 2%; ">
+    <img src="@ViewBag.Labelobj[0].LlableImg">
+    <div class="div-title">
+        <label>标签名称:</label><b>@ViewBag.Labelobj[0].Lname</b><br>
+        <label>标签内容:</label><b>@ViewBag.Labelobj[0].Lcontent</b><br>
+        <label>标签类型:</label><b>@ViewBag.Labelobj[0].Llabletypename</b><br>
+        <label>循环规则:</label><b>@ViewBag.Labelobj[0].Llableloopname</b><br>
+        <label>标签内容说明:</label><p class="pppp">
+            <small>@ViewBag.Labelobj[0].Lcontentsate</small>
+        </p>
+    </div>
+    <div>
+        <input type="button" class="layui-btn layui-btn-normal layui-btn-big" name="name" value="添加打印记录" onclick="btn.AddlableRoleLog()" />
+        <input type="button" class="layui-btn btn-danger layui-btn-big" name="name" value="查看补打记录" />
+    </div>
+
+    <table class="layui-table" lay-skin="line" id="Prtlist">
+        <thead> <tr> <th> 次第 </th> <th> 开始编号 </th> <th> 结束编号 </th> <th>打印数量</th><th> 打印时间</th> </tr> </thead>
+        <tbody>
+            @{
+                if (@ViewBag.Labelloglist != null)
+                {
+                    for (int i = 0; i < ViewBag.Labelloglist.Rows.Count; i++)
+                    {
+                        <tr>
+                            <td> @i</td>
+                            <td> @ViewBag.Labelloglist.Rows[i]["Rstartnumber"] </td>
+                            <td> @ViewBag.Labelloglist.Rows[i]["Rendnumber"]  </td>
+                            <td>@ViewBag.Labelloglist.Rows[i]["Rprintnum"]</td>
+                            <td>@ViewBag.Labelloglist.Rows[i]["Rdatetime"]</td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr><td colspan="5">无数据</td></tr>
+                }
+
+            }
+
+        </tbody>
+    </table>·
+    <div id="AddPrintLog">
+        <div>
+
+            生成规则:<span>@ViewBag.Labelobj[1].Tlooprole - @ViewBag.Labelobj[1].Spare1</span>
+            &nbsp;&nbsp;&nbsp;&nbsp;连续规则:<span>@ViewBag.Labelobj[0].Llableloopname</span>
+            &nbsp;&nbsp;&nbsp;&nbsp;上次结束标签号:<span>
+                @{
+                    if (@ViewBag.Labelloglist == null)
+                    {
+                        <span>无</span>
+                    }
+                    else
+                    {
+                        <span>@ViewBag.Labelloglist.Rows[0]["Rendnumber"]</span>
+                    }
+                }
+            </span>
+            &nbsp;&nbsp;&nbsp;&nbsp;本次开始标签号:<span>@ViewBag.startnum</span>
+        </div>
+        <hr />
+        <br />
+        即将添加:<span class="startnum">@ViewBag.startnum</span>-<span class="endnum">@ViewBag.startnum</span>
+        <br />
+        <br />
+
+        <label>本次添加标签数量</label> <input type="number" autocomplete="off" placeholder="请输入本次添加标签数量" id="addlbnum" min="1" class="layui-input-block" name="name" value="" />&nbsp;&nbsp;
+        <br /><br />
+        <div style="text-align: center"><input type="button" class="layui-btn btn-danger layui-btn-big" id="btn_addLblog" name="name" value="新增" /></div>
+    </div>
+</div>
+<input type="hidden" id="lbStartNum" name="name" value="@ViewBag.startnum" />
+<input type="hidden" id="hdUid" name="name" value="@ViewBag.Kuser.Uid" />
+<script type="text/javascript">
+    var btn = {
+        AddlableRoleLog: function () {
+            $("#AddPrintLog").show();
+            layer.open({
+                type: 1,
+                title: '添加标签',
+                skin: 'layui-layer-rim', //加上边框
+                area: ['60%', '400'], //宽高
+                content: $("#AddPrintLog"),
+                cancel: function (layero, index) {
+                    $("#AddPrintLog").css("display", "none");
+                }
+            });
+        }
+    };
+    function PrefixInteger(num, n) {
+        return (Array(n).join(0) + num).slice(-n);
+    }
+    $(function () {
+        $("#addlbnum").bind("input propertychange", function () {
+            var adnum = parseInt($(this).val());
+            var startnum = parseInt($("#lbStartNum").val());
+            if (typeof (startnum) == "undefined") {
+                adnum = 0;
+            }
+            console.log();
+            startnum += adnum;
+            var endnum = PrefixInteger(startnum-1, $("#lbStartNum").val().length);//结束标签
+            $(".endnum").text(endnum).css({ "font-size": "1.5em", "color": "red" });
+        });
+
+        $("#btn_addLblog").bind("click", function () {
+            var data = {
+                "txtPid": "@ViewBag.Labelobj[0].LProductid",//产品编号
+                "txtLid": "@ViewBag.Labelobj[0].Lid",//标签编号
+                "txtRstartnumber": "@ViewBag.startnum",//开始标签
+                "txtRendnumber": $(".endnum").text(),//结束标签
+                "txtRprintnum": $("#addlbnum").val(),//标签数量
+                "txtUid": "@ViewBag.Kuser.Uid"//用户id
+            };
+            if ("" == data.txtRprintnum || null == data.txtRprintnum||1> data.txtRprintnum) {
+                layer.msg("请输入本次打印标签数量");
+                return false;
+            }
+            layer.confirm('请确认提交信息，提交后将不能更改！', function(index){
+  //do something
+                $.post("../LabelRoleLog/AddLbPrintLog",
+                    data,
+                    function (data) {
+                        data = $.parseJSON(data);
+                        if (data.result > 0) {
+                            layer.alert(data.msg, function () {
+                                location.reload();
+                            });
+                        } else {
+                            layer.alert("添加失败请检查输入文字，或者联系开发者");
+                        }
+
+                    });
+
+            layer.close(index);
+            });
+        });
+
+
+        var len = $('#Prtlist tr').length;
+        for (var i = len; i > 0; i--) {
+            $('#Prtlist tr:eq(' + i + ') td:first').text(len-i);
+        } 
+    });
+</script>

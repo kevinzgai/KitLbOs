@@ -1,0 +1,216 @@
+﻿@using Kit.Common
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - Label System</title>
+    @Styles.Render("~/Content/layui/css")
+    @Scripts.Render("~/bundles/modernizr")
+
+    <style type="text/css">
+        .layui-nav {
+            background: #00529B;
+            border-radius: 0px;
+        }
+
+        .logo {
+            position: absolute;
+            left: 0;
+            top: 10px;
+        }
+
+        .my-header .my-header-logo {
+            display: inline-block;
+            width: auto;
+            height: 30px;
+            color: white;
+            font-size: 18px;
+            line-height: 30px;
+            padding: 15px;
+            vertical-align: top;
+        }
+
+        .body-content {
+            width: 90%;
+            margin: 0 auto;
+            border: 1px dashed #808080;
+            border-radius: 5px;
+        }
+
+        footer {
+            text-align: center;
+            font-size: 13px;
+        }
+
+        .product-item {
+        }
+
+            .product-item img:first-child {
+                width: 20%;
+                float: left;
+                max-height: 150px;
+            }
+
+            .product-item .div-title {
+                width: 50% !important;
+                float: left !important;
+                padding-left: 2% !important;
+            }
+
+            .product-item div p {
+                position: relative;
+                line-height: 1.4em;
+                /* 3 times the line-height to show 3 lines */
+                height: 4.2em;
+                overflow: hidden;
+            }
+
+                .product-item div p::after {
+                    content: "...";
+                    font-weight: bold;
+                    position: absolute;
+                    bottom: 0;
+                    right: 0;
+                    padding: 0 20px 1px 45px;
+                    background: url(http://css88.b0.upaiyun.com/css88/2014/09/ellipsis_bg.png) repeat-y;
+                }
+
+        .edit-i i {
+            cursor: pointer !important
+        }
+
+        .home-icon-tab {
+        }
+
+            .home-icon-tab tr td:first-child {
+            }
+
+                .home-icon-tab tr td:first-child img {
+                    border-radius: 5px;
+                    max-width: 81px;
+                    max-height: 81px;
+                }
+
+        .role_left_div {
+            width: 68%;
+            float: left;
+            padding-right: 10%;
+        }
+
+        .role_right_div {
+            width: 20%;
+            float: left;
+            margin-top: 10px;
+            border-radius: 10px;
+            border: 1px solid gray;
+            padding: 10px;
+        }
+
+        footer {
+            clear: left;
+        }
+
+        .layui-icon {
+            cursor: pointer !important;
+        }
+
+        .ppp {
+            word-break: keep-all;
+        }
+    </style>
+</head>
+<body>
+
+    <ul class="layui-nav">
+        <a href="" class="logo"><img src="~/Content/Image/u3.png" height="40" alt="Alternate Text" /></a>
+        <li class="layui-nav-item" style="margin-left:250px;">
+            @Html.ActionLink("标签管理", "Index/", "Products")
+        </li>
+        <li class="layui-nav-item">
+            @Html.ActionLink("产品查看", "Index/", "Products")
+        </li>
+
+        <li class="layui-nav-item">
+            <i> Buser</i>
+        </li>
+
+        <li class="layui-nav-item " style="float:right">
+            <a href="javascript:;">@ViewBag.User.UEmail</a>
+            <dl class="layui-nav-child">
+                <dd>
+                    @Html.ActionLink("安全退出", "login", "Account")
+                </dd>
+            </dl>
+        </li>
+        <li class="layui-nav-item " style="float:right">
+            <label for="lang">选择语言</label><select name="lang">
+                <option value="CN">中文</option>
+
+                <option value="EN">English</option>
+            </select>
+        </li>
+
+    </ul>
+    <div class="container body-content">
+
+        @Scripts.Render("~/bundles/jquery")
+        @Scripts.Render("~/Content/layui/js")
+
+        @RenderSection("scripts", required: false)
+        @RenderBody()
+    </div>
+    <footer>
+        <p>&copy; @DateTime.Now.Year - Label System</p>
+    </footer>
+
+
+
+</body>
+</html>
+<script>
+    layui.use(['layer', 'form', 'element'], function () {
+        var layer = layui.layer
+            , form = layui.form()
+            , element = layui.element()
+
+        //……
+        //你的代码都应该写在这里面
+    });
+
+
+    $("#btn_add").bind("click", function () {
+        $.post($(".layui-form").attr("action"),
+            $(".layui-form").serialize(),
+            function (any, jqxhr) {
+                if (any.name != "") {
+                    layer.alert("添加成功！");
+                    window.location.href = "/Products/Index/?Pnumber=" + any.Pnumber;
+                }
+                else {
+                    layer.alert("添加失败！");
+                }
+
+            });
+    });
+</script>
+<script>
+
+    layui.use('element', function () {
+        var element = layui.element(); //导航的hover效果、二级菜单等功能，需要依赖element模块
+
+        //监听导航点击
+        element.on('nav(demo)', function (elem) {
+            //console.log(elem)
+            layer.msg(elem.text());
+        });
+    });
+</script>
+
+<!--
+    B用户 标签打印 用户
+        a.a.产品查看
+        b.标签记录查看
+        c.添加标签打印记录
+-->

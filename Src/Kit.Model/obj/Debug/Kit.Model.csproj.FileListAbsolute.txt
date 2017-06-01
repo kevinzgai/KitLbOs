@@ -1,0 +1,10 @@
+D:\Src\trunk\Kit\Model\bin\Debug\Kit.Model.dll
+D:\Src\trunk\Kit\Model\bin\Debug\Kit.Model.pdb
+D:\Src\trunk\Kit\Model\obj\Debug\Kit.Model.csprojResolveAssemblyReference.cache
+D:\Src\trunk\Kit\Model\obj\Debug\Kit.Model.dll
+D:\Src\trunk\Kit\Model\obj\Debug\Kit.Model.pdb
+E:\LableOs\trunk\Kit\Kit.Model\bin\Debug\Kit.Model.dll
+E:\LableOs\trunk\Kit\Kit.Model\bin\Debug\Kit.Model.pdb
+E:\LableOs\trunk\Kit\Kit.Model\obj\Debug\Kit.Model.csprojResolveAssemblyReference.cache
+E:\LableOs\trunk\Kit\Kit.Model\obj\Debug\Kit.Model.dll
+E:\LableOs\trunk\Kit\Kit.Model\obj\Debug\Kit.Model.pdb

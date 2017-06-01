@@ -1,0 +1,159 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - Label System</title>
+
+    @Styles.Render("~/Content/layui/css")
+    <link href="~/Content/login.css" rel="stylesheet" />
+    <style>
+        .layui-form-label {
+            width: 150px;
+        }
+        .product-item {
+        }
+
+            .product-item img:first-child {
+                width: 20%;
+                float: left;
+                max-height: 150px;
+                border-radius: 3px;border: 1px solid #778899;
+            }
+
+            .product-item .div-title {
+                width: 50% !important;
+                float: left !important;
+                padding-left: 2% !important;
+            }
+
+            .product-item div p {
+                position: relative;
+                line-height: 1.4em;
+                /* 3 times the line-height to show 3 lines */
+                height: 4.2em;
+                overflow: hidden;
+            }
+             .product-item div >.pppp {
+                 text-indent: 2em;
+                 color: #008b8b;
+             }
+            .product-item div > .pppp small{
+                font-size: 1.2em;
+            }
+
+                .product-item div p:after {
+                    content: "...";
+                    font-weight: bold;
+                    position: absolute;
+                    bottom: 0;
+                    right: 0;
+                    padding: 0 20px 1px 45px;
+                    background: url(http://css88.b0.upaiyun.com/css88/2014/09/ellipsis_bg.png) repeat-y;
+                }
+        #AddPrintLog {
+            border: 1px solid rgba(0,0,0,0.1);
+            border-radius: 5px;
+            font-size: 20px;padding: 5px;
+            margin: 2%;
+            display: none;
+            
+        }
+            #AddPrintLog>div {
+                padding: 10px;font-size: medium;
+            }
+               #AddPrintLog>div>span {
+                   color: #008000;
+               }
+            #AddPrintLog > .startnum, #AddPrintLog > .endnum {
+                font-size: 1.5em;
+            }
+        #btn_addLblog {
+            width: 300px;
+        }
+    </style>
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/Content/layui/js")
+</head>
+<body>
+
+    @RenderBody()
+</body>
+</html>
+@RenderSection("scripts", required: false)
+<script>
+    
+    var box = {
+        open: function (selectV) {
+            layer.open({
+                type: 1,
+                skin: 'layui-layer-rim', //加上边框
+                area: ['650px', '500px'], //宽高
+                content: $(selectV).html()
+            });
+        }
+    };
+
+  
+    if (window.location.href.indexOf('#') > -1) {
+        window.location.href = window.location.href.split('#')[0];
+    }
+    $(function () {
+        // layer.msg("测试账号是：zhanggai_ok@126.com 密码：bianque007");
+        //layer.msg($("title").html());
+        $("#btn_login").bind("click", function () {
+
+            // 做表单输入校验
+            var userId = $("#username");
+            var password = $("#password");
+            var msg = "";
+            if ($.trim(userId.val()) == "") {
+                msg = "Email不能为空！";
+                userId.focus();
+            } else if (!/\w@@\w*\.\w/.test($.trim(userId.val()))) {
+                msg = "Email格式不正确！";
+                userId.focus();
+            } else if ($.trim(password.val()) == "") {
+                msg = "密码不能为空！";
+                password.focus();
+            } else if (!/^\w{6,20}$/.test($.trim(password.val()))) {
+                msg = "密码格式不正确！";
+                password.focus();
+            }
+            else if (msg != "")
+            {
+                layer.alert(msg);
+                return false;
+            }
+
+            if (msg != "") {
+                layer.alert(msg);
+            } else {
+                // 获取表单中的参数
+                $.post($("form").attr("action"),
+                    $("form").serialize(),
+                    function (data, textStatus) {
+                        data = $.parseJSON(data);
+                        //alert(data.result);
+                        if (data.result=="0") {
+                            layer.msg("登录成功");
+                            window.location.href = "../Products/";
+
+                        }
+                        else
+                        {
+                            layer.msg("登录失败" + data.msg);
+
+                        }
+                    }
+                );
+                return false;
+            }
+            
+        });
+       
+       
+    });
+
+</script>

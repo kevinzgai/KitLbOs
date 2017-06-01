@@ -1,0 +1,388 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+    Layout = null;
+}
+
+<!DOCTYPE html >
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>
+        导航页面
+    </title>
+    @Styles.Render("~/Content/layui/css")
+    <script type="text/javascript" src="~/Scripts/jquery-1.10.2.js"></script>
+    <script type="text/javascript" src="~/Content/layui/lay/dest/layui.all.js"></script>
+    <script type="text/javascript">
+
+        (function ($) {
+            $.fn.dom = function () { return this[0]; }
+        })($);
+        $ = jQuery = layui.jquery;
+        function Pointer(x, y) {
+            this.x = x;
+            this.y = y;
+        }
+        function Position(left, top) {
+            this.left = left;
+            this.top = top;
+        }
+        function Direction(horizontal, vertical) {
+            this.horizontal = horizontal;
+            this.vertical = vertical;
+        }
+        function requestFullScreen(element) {
+            // 判断各种浏览器，找到正确的方法
+            var requestMethod = element.requestFullScreen || //W3C
+                element.webKitRequestFullScreen ||    //Chrome等
+                element.mozRequestFullScreen || //FireFox
+                element.msRequestFullScreen; //IE11
+            if (requestMethod) {
+                requestMethod.call(element);
+            }
+            else if (typeof window.ActiveXObject !== "undefined") {//for Internet Explorer
+                var wscript = new ActiveXObject("WScript.Shell");
+                if (wscript !== null) {
+                    wscript.SendKeys("{F11}");
+                }
+
+            }
+        }
+        $(function () {
+            $.getJSON("/SystemSet/GetResult",
+                "",
+                function (data) {
+                    //return data;
+                    var dalist = data;
+                    var wtitile = "";//当前窗口标题
+                    var listhtml = "";
+                    var listfristitem = "<div class='desktop'><div class='layui-layer-title'>{wtitle}</div><ul><li title='' url='{url}'><a href='#'><img src='{img} ' width='65' height='65' /></a><span>{title}</span></li>";
+                    var listitem = "<li title='{title} ' url='{url} '><a href='#'><img src='{img} ' width='65' height='65' /></a><span>{title}</span></li>";//</ul></div></div>
+
+                    for (var i = 0; i < dalist.length; i++) {
+                        if (dalist[i].Skey2.trim() != wtitile) {//新窗口
+                            wtitile = dalist[i].Skey2.trim();
+                            var item = listfristitem;
+                            item = item.replace("{wtitle}", wtitile.trim());
+                            item = item.replace("{img}", dalist[i].Skey1.trim());
+                            item = item.replace("{title}", dalist[i].Sname.trim());
+                            item = item.replace("{Sid}", dalist[i].Sid);
+                            item = item.replace("{Sid}", dalist[i].Sid);
+                            item = item.replace("{url}", dalist[i].Svalue.trim());
+                            listhtml += item;
+
+                        } else {
+                            var item = listitem;
+                            item = item.replace("{wtitle}", wtitile.trim());
+                            item = item.replace("{img}", dalist[i].Skey1.trim());
+                            item = item.replace("{title}", dalist[i].Sname.trim());
+                            item = item.replace("{Sid}", dalist[i].Sid);
+                            item = item.replace("{Sid}", dalist[i].Sid);
+                            item = item.replace("{url}", dalist[i].Svalue.trim());
+                            listhtml += item;
+                        }
+
+                    }
+                    // $("#form1").append(listhtml);
+                });
+            $("ul li").click(function () {
+                stitle = $(this).attr("title");
+                strurl = $(this).attr("url");
+                layer.open({
+                    title: stitle,
+                    type: 2,
+                    shade:0,
+                    content: strurl, //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
+                    Boolean: true,
+                    area: ["90%", "90%"],
+                    maxmin: true,
+                    cancel: function (index, layero) {
+                        layer.confirm("确定要关闭么?如果暂时不用可以最小化当前页面哦！", function () {
+                            layer.close(index);
+                            layer.closeAll('dialog');
+                        }, function () {
+                            layer.msg("取消");
+                        },
+                            { icon: 6 });
+                        //if (confirm('')) { //只有当点击confirm框的确定时，该层才会关闭
+                        //    layer.close(index)
+                        //}
+                        return false;
+                    }
+                });
+
+            });
+            var clientWidth = document.documentElement.clientWidth || document.body.clientWidth;
+            var clientHeight = document.documentElement.clientHeight || document.body.clientHeight;
+            $(".desktop_bg").width(clientWidth).height(clientHeight);
+
+            var oldPointer = new Pointer();
+            var oldPosition = new Position();
+            var direction = new Direction();
+            var div = $("<div></div>").css({
+                background: "blue",
+                position: "absolute",
+                opacity: "0.2"
+            }).appendTo($("body"));
+            var isDown = false;
+            $(document).mousedown(function (e) {
+
+                e.preventDefault();
+                if (div.dom().setCapture) {
+                    div.dom().setCapture(true);
+                }
+                $("ul li").css("border", "1px solid transparent");
+                isDown = true;
+                oldPointer.x = e.clientX;
+                oldPointer.y = e.clientY;
+                oldPosition.left = e.clientX,
+                    oldPosition.top = e.clientY
+                div.css({
+                    left: e.clientX,
+                    top: e.clientY
+                });
+            });
+            div.extend({
+                checkC: function () {
+                    var $this = this;
+                    $("ul li").each(function () {
+                        if ($this.offset().left + $this.width() > $(this).offset().left &&
+                            $this.offset().left < $(this).offset().left + $(this).width()
+                            && $this.offset().top + $this.height() > $(this).offset().top
+                            && $this.offset().top < $(this).offset().top + $(this).height()) {
+                            $(this).css("border", "1px solid #90bedb");
+                        } else {
+                            $(this).css("border", "1px solid transparent");
+                        }
+                    });
+                }
+            });
+            $(document).mousemove(function (e) {
+                if (!isDown) return isDown;
+                if (e.clientX > oldPointer.x) {
+                    direction.horizontal = "Right";
+                } else if (e.clientX < oldPointer.x) {
+                    direction.horizontal = "Left";
+                } else {
+                    direction.horizontal = "";
+                }
+                if (e.clientY > oldPointer.y) {
+                    direction.vertical = "Down";
+                } else if (e.clientY < oldPointer.y) {
+                    direction.vertical = "Up";
+                } else {
+                    direction.vertical = "";
+                }
+                var directionOperation = {
+                    LeftUp: function () {
+                        div.css({
+                            width: Math.abs(e.clientX - oldPointer.x),
+                            height: Math.abs(e.clientY - oldPointer.y),
+                            top: oldPosition.top - Math.abs(e.clientY - oldPointer.y),
+                            left: oldPosition.left - Math.abs(e.clientX - oldPointer.x)
+                        });
+                    },
+                    LeftDown: function () {
+                        div.css({
+                            width: Math.abs(e.clientX - oldPointer.x),
+                            height: Math.abs(e.clientY - oldPointer.y),
+                            left: oldPosition.left - Math.abs(e.clientX - oldPointer.x)
+                        });
+                    },
+                    Down: function () {
+                        div.css({
+                            width: 1,
+                            height: Math.abs(e.clientY - oldPointer.y)
+                        });
+                    },
+                    Up: function () {
+                        div.css({
+                            width: 1,
+                            height: Math.abs(e.clientY - oldPointer.y),
+                            top: oldPosition.top - Math.abs(e.clientY - oldPointer.y)
+                        });
+                    },
+                    Right: function () {
+                        div.css({
+                            width: Math.abs(e.clientX - oldPointer.x),
+                            height: 1
+                        });
+                    },
+                    Left: function () {
+                        div.css({
+                            width: Math.abs(e.clientX - oldPointer.x),
+                            height: 1,
+                            left: oldPosition.left - Math.abs(e.clientX - oldPointer.x)
+                        });
+                    },
+                    RightDown: function () {
+                        div.css({
+                            width: Math.abs(e.clientX - oldPointer.x),
+                            height: Math.abs(e.clientY - oldPointer.y)
+                        });
+                    },
+                    RightUp: function () {
+                        div.css({
+                            width: Math.abs(e.clientX - oldPointer.x),
+                            height: Math.abs(e.clientY - oldPointer.y),
+                            top: oldPosition.top - Math.abs(e.clientY - oldPointer.y)
+                        });
+                    }
+                }
+                directionOperation[direction.horizontal + direction.vertical]();
+                div.checkC();
+
+            });
+            $(document).mouseup(function () {
+                if (!isDown) return isDown;
+                isDown = false;
+                div.width(0).height(0);
+                if (div.dom().releaseCapture) {
+                    div.dom().releaseCapture(true);
+                }
+            });
+        });
+    </script>
+    <style type="text/css">
+        body {
+            overflow: auto;
+            padding: 0;
+            margin: 0;
+            background-color: #333333;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+            ul li {
+                border: 1px solid transparent;
+                padding: 5px;
+                width: 95px;
+                height: 95px;
+                margin-top: 30px;
+                text-align: center;
+                font: 14px/16px "微软雅黑";
+                color: #fff;
+                border-radius: 4px;
+                float: left;
+                margin-bottom: 30px;margin-left: 10px;
+            }
+
+                ul li span {
+                    margin: 10px;
+                    font-size: 15px;
+                    padding-top: 2px;
+                    display: block;
+                    overflow-x: visible
+                }
+
+                ul li img {
+                    border-radius: 10px;
+                }
+
+        .desktop {
+            margin: 0 auto;
+            max-width: 45%;
+            border: 1px solid #fff;
+            border-radius: 5px;
+            margin: 10px;
+            float: left;
+            height: auto;
+        }
+        .desktop:last-child {
+            margin: 0 auto;
+            max-width: 45%;
+            border: 1px solid #fff;
+            border-radius: 5px;
+            margin: 10px;
+            float: left;
+            height: auto;
+        }
+        img {
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <form method="post" action="" id="form1">
+        <div class="desktop">
+            <div class="layui-layer-title">内部系统</div>
+            <ul>
+                <li title="企业管理" url="~/Products/index/">
+                    <a href="#">
+                        <img src="~/Content/Image/deskIcon/printer-orange.png" width="100"
+                             height="100" />
+                    </a><span>标签打印管理</span>
+                </li>
+                <li title="MAQTrace" url="http://172.30.40.9/login.htm">
+                    <a href="#">
+                        <img src="~/Content/Image/deskIcon/timg.jpg" width="100"
+                             height="100" />
+                    </a><span>MAQTrace</span>
+                </li>
+                <li title="请假系统" url="http://172.30.40.9:8080/appform/login.aspx">
+                    <a href="#">
+                        <img src="~/Content/Image/deskIcon/cj.png" width="100"
+                             height="100" />
+                    </a><span>请假系统</span>
+                </li>
+                <li>
+                    <a href="#">
+                        <img src="http://www.17sucai.com/preview/166243/2014-10-08/jquery-win7/a4.png" width="100"
+                             height="100" />
+                    </a><span>产品管理</span>
+                </li>
+                <li>
+                    <a href="#">
+                        <img src="http://www.17sucai.com/preview/166243/2014-10-08/jquery-win7/a5.png" width="100"
+                             height="100" />
+                    </a><span>产品管理</span>
+                </li>
+                <li>
+                    <a href="#">
+                        <img src="http://www.17sucai.com/preview/166243/2014-10-08/jquery-win7/a1.png" width="100"
+                             height="100" />
+                    </a><span>产品管理</span>
+                </li>
+                <li>
+                    <a href="#">
+                        <img src="~/Content/Image/Lyerui.png" width="100" />
+                    </a><span>Layui帮助</span>
+                </li>
+
+                <li url="http://www.taobao.com">
+                    <a>
+                        <img src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1491568366127&di=c6b8b8899fc9ba23043dfdcf9ea111ae&imgtype=0&src=http%3A%2F%2Fimgqn.koudaitong.com%2Fupload_files%2F2014%2F10%2F20%2FFj4AIYriaiIHysbFDu45JcMJRFGy.png" width="100" height="100" alt="Alternate Text" />
+                    </a>
+                    <span>淘宝网</span>
+                </li>
+                <li url="http://fm.baidu.com" title="fm百度音乐">
+                    <a>
+                        <img src="http://cdn2.image.apk.gfan.com/asdf/PImages/2012/12/14/450794_292201425-b962-4b38-8e70-78f927f65fbe.png" width="100" height="100" alt="Alternate Text" />
+                    </a>
+                    <span>Fm百度</span>
+                </li>
+            </ul>
+        </div>
+        @{
+            string win = "<div class='desktop'><div class='layui-layer-title'>{wtitle}</div><ul>";
+            string winend = "</ul></div>";
+            @(new HtmlString(@win.ToString().Replace("{wtitle}", "自定义窗口")))
+            ;
+            for (int i = 0; i < @ViewBag.Ksystemset.Count; i++)
+            {
+
+                <li title="@ViewBag.Ksystemset[i].Sname" url="@ViewBag.Ksystemset[i].Svalue">
+                    <a href="#">
+                        <img src="@ViewBag.Ksystemset[i].Skey1" width="100"
+                             height="100"/>
+                    </a><span>@ViewBag.Ksystemset[i].Sname</span>
+                </li>
+            }
+            @(new HtmlString(@winend))
+        }
+    </form>
+</body>
+</html>

@@ -1,0 +1,154 @@
+﻿@using System.Web.UI.HtmlControls
+
+@{
+    ViewBag.Title = "首页-图标列表";
+    Layout = "~/Views/Shared/_Layui.cshtml";
+}
+
+<div class="site-text site-block layui-form" style="width:80%;  margin:0 auto;">
+    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 50px;">
+        <legend>添加首页图标</legend>
+    </fieldset>
+    <div class="layui-form-item" style="padding-left:70%">
+        <div class="layui-input-inline">
+            <input type="text" name="password" required="" placeholder="请输入编号或者产品名称" autocomplete="on" class="layui-input">
+        </div>
+        <div class="">
+            <input class="layui-btn layui-btn-primary" type="button" name="name" value="搜索" />
+            @Html.ActionLink("添加子Icon", "AddHomeIcon", "SystemSet", new { @class = "layui-btn layui-btn-danger", @id = "btn-addicon" })
+        </div>
+    </div>
+    <div class="layui-form-item">
+
+        <table class="layui-table home-icon-tab" lay-skin="line">
+            <colgroup>
+                <col width="10">
+                <col width="250">
+                <col width="30">
+                <col width="30">
+            </colgroup>
+            <thead>
+                <tr class="layui-bg-green">
+                    <th>Ico</th>
+                    <th>title</th>
+                    <th>URL</th>
+                    <th>Edit</th>
+                </tr>
+            </thead>
+            <tbody id="tblist">
+                <!--<tr>
+                    <td colspan="4" style="line-height: 40px;">title:{窗口标题} </td>
+                </tr>
+                <tr>
+                    <td><img src="~/Content/Image/Lyerui.png" /></td>
+                    <td>Href:{标题}</td>
+                    <td>Href:{连接}</td>
+                    <td class="edit-i"><i class="layui-icon" onclick="Btn.edit('唯一标识id')">&#xe642;</i><i class="layui-icon" onclick="Btn.del('唯一标识id')">&#xe640;</i></td>
+                </tr>-->
+            </tbody>
+        </table>
+    </div>
+
+</div>
+<script>
+
+    var page = {
+        load: function () {
+            layer.msg("load");
+
+        },
+        loadiconlist: function () {
+            $.getJSON("/SystemSet/GetResult",
+                "",
+                function (data) {
+                    //return data;
+                    var dalist = data;
+                    var wtitile = "";//当前窗口标题
+                    var listhtml = "";
+                    var listfristitem = "<tr><td colspan='4' class='layui-bg-gray'>窗口名称>>{wtitle}</td></tr><tr><td><img src='{img}' /></td><td>{title}</td><td>{url}</td><td class='edit-i'><i class='layui-icon' onclick=\"btn.edit('{Sid}')\">&#xe642;</i><i class='layui-icon' onclick=\"btn.del('{Sid}')\">&#xe640;</i></td></tr>";
+                    var listitem = "<tr><td><img src='{img}' /></td><td>{title}</td><td>{url}</td><td class='edit-i'><i class='layui-icon' onclick=\"btn.edit('{Sid}')\">&#xe642;</i><i class='layui-icon' onclick=\"btn.del('{Sid}')\">&#xe640;</i></td></tr>";
+
+                    for (var i = 0; i < dalist.length; i++) {
+                        if (dalist[i].Skey2.trim() != wtitile) {//新窗口
+                            wtitile = dalist[i].Skey2.trim();
+                            var item = listfristitem;
+                            item = item.replace("{wtitle}", wtitile.trim());
+                            item = item.replace("{img}", dalist[i].Skey1.trim());
+                            item = item.replace("{title}", dalist[i].Sname.trim());
+                            item = item.replace("{Sid}", dalist[i].Sid);
+                            item = item.replace("{Sid}", dalist[i].Sid);
+                            item = item.replace("{url}", dalist[i].Svalue.trim());
+                            listhtml += item;
+
+
+                        } else {
+                            var item = listitem;
+                            item = item.replace("{wtitle}", wtitile.trim());
+                            item = item.replace("{img}", dalist[i].Skey1.trim());
+                            item = item.replace("{title}", dalist[i].Sname.trim());
+                            item = item.replace("{Sid}", dalist[i].Sid);
+                            item = item.replace("{Sid}", dalist[i].Sid);
+                            item = item.replace("{url}", dalist[i].Svalue.trim());
+                            listhtml += item;
+                        }
+
+                    }
+                    $("#tblist").append(listhtml);
+                });
+
+        }
+    }
+    $(function () {
+        //添加icon事件
+        $("#btn-addicon").bind("click", function () {
+            box.iframe("添加icon", "/SystemSet/AddHomeIcon");
+            return false;
+        });
+
+        page.loadiconlist();
+    });
+    //页面层
+
+    var box = {
+        open: function (selectV) {
+            layer.open({
+                type: 1,
+                skin: 'layui-layer-rim', //加上边框
+                area: ['620px', '500px'], //宽高
+                content: $(selectV).html()
+            });
+        },
+        iframe: function (title, url) {
+            layer.open({
+                type: 2,
+                title: title,
+                shadeClose: true,
+                resize: true,
+                scrollbar: true,
+                shade: 0.8,
+                area: ['80%', '90%'],
+                content: url //iframe的url
+            });
+        }
+    };
+    var btn = {
+        del: function (id) {
+            layer.confirm("是否要删除？",
+                function () {
+                    layer.msg("执行删除操作" + id);
+                    $.getJSON("/SystemSet/EditHomeIcon?type=del&sid=" + id,
+                        "",
+                        function(data) {
+                            console.log(data);
+                            window.location.reload();
+                        });
+                }, function () {
+                    layer.msg("取消删除" + id);
+                });
+        },
+        edit: function (id) {
+            //alert("编辑" + id);
+            box.iframe("编辑icon", "AddHomeIcon?Sid=" + id);
+        }
+    }
+</script>

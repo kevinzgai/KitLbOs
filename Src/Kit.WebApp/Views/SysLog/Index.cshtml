@@ -1,0 +1,45 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layui.cshtml";
+}
+
+<h1 class="layui-layer-title">系统日志</h1>
+<div class="layui-form-item" style="text-align: right; padding-right: 10%;">
+    <label>搜索条件</label>
+    <select class="layui-input-block" id="keyval" style="height: 30px; margin-left: 20px; ">
+        <option value="0">全部</option>
+        <option value="ulogin">用户登录、账户</option>
+        <option value="Uupdate">用户信息修改</option>
+        <option value="prtlblog">标签打印记录</option>
+    </select>
+    <input type="button" name="name" id="SeachBtn" class="layui-btn layui-btn-danger" value="搜索" />
+</div>
+<table class="layui-table">
+    <tr>
+        <th>操作时间</th>
+        <th>用户id</th>
+        <th>日志内容</th>
+        <th>日志类型</th>
+        <th>日志说明</th>
+    </tr>
+    @{
+        foreach (var @Mlog in @ViewBag.Model)
+        {
+            <tr>
+                <th>@Mlog.Atime</th>
+                <th>@Mlog.Uid</th>
+                <th>@Mlog.Acontent</th>
+                <th>@Mlog.Atype</th>
+                <th>@Mlog.Astate</th>
+            </tr>
+        }
+    }
+
+</table>
+<script>
+    $(function() {
+        $("#SeachBtn").click(function () {
+            location.href = "../../SysLog/index/"+$("#keyval").val();
+        });
+    });
+</script>

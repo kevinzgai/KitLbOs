@@ -1,0 +1,98 @@
+﻿
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_Layui.cshtml";
+}
+
+
+@using (Html.BeginForm())
+{<div class="site-text site-block" style="width:80%;  margin:0 auto;">
+        <fieldset class="layui-elem-field layui-field-title" style="margin-top: 50px;">
+            <legend>添加账号</legend>
+        </fieldset>
+        <div>
+
+            <table cellSpacing="0" cellPadding="0" width="100%" border="0" class="layui-table">
+                <tr>
+                    <td height="25" width="30%" align="right">
+                        用户Email：
+                    </td>
+                    <td height="25" width="*" align="left">
+                        <input type="email" id="txtUEmail" class="layui-input" name="name" value="" placeholder="请输入Email" />
+                    </td>
+                </tr>
+                <tr>
+                    <td height="25" width="30%" align="right">
+                        用户密码：
+                    </td>
+                    <td height="25" width="*" align="left">
+                        <input type="password" id="txtUpwd" name="name" class="layui-input" value="" placeholder="请输入密码" />
+                    </td>
+                </tr>
+                <tr>
+                    <td height="25" width="30%" align="right">
+                        默认语言：
+                    </td>
+                    <td height="25" width="*" align="left">
+                        <select id="txtUlang" class="layui-input">
+                            <option value="CN">中文</option>
+                            <option value="EN">English</option>
+                        </select>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td height="25" width="30%" align="right">
+                        Urole：
+                    </td>
+                    <td height="25" width="*" align="left">
+                        <select id="txtUrole" class="layui-input">
+                            <option value="A" selected="selected">标签查阅员</option>
+                            <option value="B" selected="selected">标签录入员</option>
+                            <option value="C" selected="selected">标签系统管理员</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <input type="button" id="btn_adduser" name="name" value="添加用户" class="layui-btn btn-danger" />
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+}
+<div>
+    @Html.ActionLink("Back to List", "Index", null, new { @class = "layui-btn layui-btn-mini" })
+</div>
+<script type="text/javascript">
+    layui.use(['layer', 'laypage', 'element'],
+        function () {
+            var layer = layui.layer, laypage = layui.laypage, element = layui.element();
+            $("#btn_adduser").bind("click", function () {
+                var data = {
+                    txtUEmail: $("#txtUEmail").val(),
+                    txtUpwd: $("#txtUpwd").val(),
+                    txtUlang: $("#txtUlang").val(),
+                    txtUrole: $("#txtUrole").val()
+                };
+
+                $.post("@Url.Action("Createaction", "Account")", data, function (res) {
+                    res = $.parseJSON(res);
+                    if (res.result > 0) {
+                        layer.alert("添加成功",
+                            function() {
+                                location.href = "@Url.Action("GetAccount", "Account")";
+                            });
+                    } else {
+                        
+                        layer.msg(res.msg);
+                        return false;
+                    }
+                    console.log(res);
+
+                });
+            });
+        });
+</script>

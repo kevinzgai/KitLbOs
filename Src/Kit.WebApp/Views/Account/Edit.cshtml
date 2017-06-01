@@ -1,0 +1,119 @@
+﻿
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/_Layui.cshtml";
+}
+<style>
+    .tdbg input[type='text'] {
+        max-width: 80%;
+    }
+</style>
+
+<table cellSpacing="0" cellPadding="0" width="90%" border="0" class="layui-table">
+    <tr>
+        <td colspan="2" class="layui-layer-title">
+            修改信息
+        </td>
+    </tr>
+    <tr>
+        <td height="25" width="30%" align="right">
+            用户唯一标识
+            ：
+        </td>
+        <td height="25" width="*" align="left">
+            @ViewBag.Model.Uid
+        </td>
+    </tr>
+    <tr>
+        <td height="25" width="30%" align="right">
+            用户Email
+            ：
+        </td>
+        <td height="25" width="*" align="left">
+            <input type="text" class="layui-input" value="@ViewBag.Model.UEmail" readonly="readonly" id="txtUEmail" runat="server" Width="200px">
+        </td>
+    </tr>
+    <tr>
+        <td height="25" width="30%" align="right">
+            用户密码
+            ：
+        </td>
+        <td height="25" width="*" align="left">
+            <input type="text" class="layui-input" id="txtUpwd" value="@ViewBag.Model.Upwd" runat="server" Width="200px">
+        </td>
+    </tr>
+    <tr>
+        <td height="25" width="30%" align="right">
+            默认语言：
+        </td>
+        <td height="25" width="*" align="left">
+            <select id="txtUlang" class="layui-input">
+                <option value="CN">中文</option>
+                <option value="EN">English</option>
+            </select>
+            <input type="hidden" id="hidLang" value="@ViewBag.Model.Ulang" />
+        </td>
+    </tr>
+    <tr>
+        <td height="25" width="30%" align="right">
+            Urole：
+        </td>
+        <td height="25" width="*" align="left">
+            <select id="txtUrole" class="layui-input">
+                <option value="A">标签查阅员</option>
+                <option value="B">标签录入员</option>
+                <option value="C">标签系统管理员</option>
+            </select>
+            <input type="hidden" id="hidrole" value="@ViewBag.Model.Urole" />
+        </td>
+    </tr>
+    <tr>
+        <td class="tdbg" align="center" colspan="2" valign="bottom">
+            <input type="button" id="Edit_adduser" class="btn layui-btn" name="name" value="修改" />
+        </td>
+    </tr>
+</table>
+
+
+<div>
+    @Html.ActionLink("Back to List", "Index", null, new { @class = "layui-btn layui-btn-mini" })
+</div>
+<script type="text/javascript">
+    $(function () {
+        var lang="@ViewBag.Model.Ulang".trim();
+        var role="@ViewBag.Model.Urole".trim();
+        $("#txtUrole").find("option[value='" + role + "']").attr("selected", true);
+        $("#txtUlang").find("option[value='" + lang + "']").attr("selected", true);
+
+        });
+    layui.use(['layer', 'laypage', 'element'],
+        function () {
+            var layer = layui.layer, laypage = layui.laypage, element = layui.element();
+            $("#Edit_adduser").bind("click", function () {
+                var data = {
+                    id: "@ViewBag.Model.Uid",
+                    txtUEmail: "@ViewBag.Model.UEmail",
+                    txtUpwd: $("#txtUpwd").val(),
+                    txtUlang: $("#txtUlang").val(),
+                    txtUrole: $("#txtUrole").val()
+                };
+                //console.log(data);
+
+                $.post("@Url.Action("Editaction", "Account")", data, function (res) {
+                    res = $.parseJSON(res);
+                    if (res.result > 0) {
+                        layer.alert("修改成功",
+                            function() {
+                                location.href = "@Url.Action("GetAccount", "Account")";
+                            });
+                    } else {
+
+                        layer.msg(res.msg);
+                        return false;
+                    }
+                   // console.log(res);
+
+                });
+            });
+         });
+</script>

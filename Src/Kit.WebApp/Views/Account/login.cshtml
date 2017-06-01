@@ -1,0 +1,67 @@
+﻿
+@{
+    ViewBag.Title = "login";
+    Layout = "~/Views/Shared/_Layuidomnull.cshtml";
+}
+
+<div class="login-container" style="height:100%">
+
+    <div class="clouds clouds-footer"></div>
+    <div class="clouds"></div>
+    <div class="clouds clouds-fast"></div>
+
+    <div class="header">
+        <span>欢迎登录后台管理界面平台</span>
+        <ul>
+            <li><a href="/">回首页<small>BackHome</small></a></li>
+            <li>
+                <label for="lang">选择语言</label><select name="lang">
+                    <option value="CN">中文</option>
+
+                    <option value="EN">English</option>
+                </select>
+            </li>
+        </ul>
+    </div>
+
+    <div class="container" style="top:50%;margin-top:-300px">
+
+        <form  action="/Account/loginaction" data-auto="true" method="post" class="content layui-form">
+            <div class="people">
+                <div class="tou"></div>
+                <div id="left-hander" class="initial_left_hand transition"></div>
+                <div id="right-hander" class="initial_right_hand transition"></div>
+            </div>
+            <ul>
+                <li>
+                    <input id="username"  required="required"
+                           pattern="^\S{4,}$"
+                           title="请输入4位及以上的字符"
+                           type="text"
+                           name="username"
+                           value="zhanggai_ok@126.com"
+                           autocomplete="off"
+                           autofocus="autofocus"
+                           class="login-input username"
+                           placeholder="请输入用户名/手机号码" />
+                </li>
+                <li>
+                    <input id="password" required="required"
+                           pattern="^\S{4,}$"
+                           title="请输入4位及以上的字符"
+                           type="password"
+                           name="password"
+                           value="bianque007"
+                           autocomplete="off"
+                           class="login-input password"
+                           placeholder="请输入密码" />
+                </li>
+                <li class="text-center">
+                    <button type="button" class="layui-btn" id="btn_login">立即登入（singin）</button>
+                </li>
+            </ul>
+        </form>
+    </div>
+</div>
+
+

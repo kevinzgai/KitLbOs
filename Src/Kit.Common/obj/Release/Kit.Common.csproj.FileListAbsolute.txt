@@ -1,0 +1,2 @@
+E:\LableOs\trunk\Kit\Kit.Common\obj\Release\Kit.Common.csprojResolveAssemblyReference.cache
+D:\Src\trunk\Kit\Kit.Common\obj\Release\Kit.Common.csprojResolveAssemblyReference.cache

@@ -1,0 +1,169 @@
+﻿
+@{
+    ViewBag.Title = "AddLableRole";
+    Layout = "~/Views/Shared/_Layui.cshtml";
+}
+<div class="site-text site-block" style="width:80%;  margin:0 auto;">
+    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 50px;">
+        <legend>标签类型管理</legend>
+    </fieldset>
+    <div class="layui-form-item" style="padding-left:70%">
+        <div class="layui-input-inline">
+            <input type="text" name="password" required="" placeholder="请输入编号或者产品名称" autocomplete="on" class="layui-input">
+        </div>
+        <div class=""><input class="layui-btn layui-btn-primary" type="button" name="name" value="搜索" /></div>
+    </div>
+    <div class="layui-form-item">
+
+        <table class="layui-table" lay-skin="line">
+            <colgroup>
+                <col width="20">
+                <col width="150">
+                <col width="250">
+                <col width="30">
+            </colgroup>
+            <thead>
+                <tr>
+                    <th>编号</th>
+                    <th>标签</th>
+                    <th>标签说明</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                @* <tr><td>{No}</td>
+                    <td>{Name}</td>
+                    <td>{Des}</td>
+                    <td class="edit-i"><i class="layui-icon" onclick="Btn.edit('唯一标识id')">&#xe642;</i><i class="layui-icon" onclick="Btn.del('唯一标识id')">&#xe640;</i></td></tr>*@
+                @Html.Raw(@ViewBag.listhtml)
+
+            </tbody>
+        </table>
+        <div>
+
+            <input type="button" class="layui-btn layui-btn-danger" name="name" onclick="Addlable()" value="添加标签"  />
+            
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    function setCookie(name, value) {
+        var Days = 1;
+        var exp = new Date();
+        exp.setTime(exp.getTime() + Days * 24 * 60 * 60 * 1000);
+        document.cookie = name + "=" + escape(value) + ";expires=" + exp.toGMTString();
+    }
+    function getCookie(name) {
+        var arr, reg = new RegExp("(^| )" + name + "=([^;]*)(;|$)");
+        if (arr = document.cookie.match(reg))
+            return unescape(arr[2]);
+        else
+            return null;
+    }
+
+    function delCookie(name) {
+        var exp = new Date();
+        exp.setTime(exp.getTime() - 1);
+        var cval = getCookie(name);
+        if (cval != null)
+            document.cookie = name + "=" + cval + ";expires=" + exp.toGMTString();
+    }
+
+    var Edithtml = "<div id='Editwin'style='display:block;'> <table class='layui-table layui-input-block' > <input type='hidden' name='name' id='editid' value='{editid}' /><tr>" +
+        "<td>标签名</td><td><input type='text' id='Edit_name' name='Edit_name' value='{l_name}' class='layui-input' /></td> </tr> <tr><td>说明</td>" +
+        "<td><input type='text' id='Edit_des' name='Edit_des' value='{l_des}' class='layui-input' /></td></tr>" +
+        "<tr ><td colspan='2' class='text-center'><button class='layui-btn' onclick='Editlable(this)' >修改</button></td></tr></table ></div >";
+
+    Btn = {
+        del: function (str) {
+            //layer.alert(str);
+            layer.confirm("确定要删除吗？",
+                function() {
+                    Ajax.post("/SystemSet/AddLableRoledelaction", { Sid: str }, function (data) {
+                        if ($.parseJSON(data).result) {
+                            layer.alert("删除成功", function () {
+                                location.reload();
+                            });
+                        }
+                    });
+                });
+          
+        }, edit: function (sid) {
+            // layer.alert("编辑" + str);
+            Ajax.post("/SystemSet/getLableRole", { id: sid }, function (data) {
+                setCookie("editid", sid);
+                //alert(data[0]);
+                var ed = Edithtml;
+                // data = $.parseJSON(data);
+                // data = { Sid: 52, Stype: "LableRole ", Sname: "222", Svalue: "333", Skey1: "", Skey2: "" };
+                ed = ed.replace("{l_name}", data.Sname)
+                ed = ed.replace("{l_des}", data.Svalue)
+                ed = ed.replace("{editid}", data.Sid)
+                layer.open({
+                    type: 1,
+                    skin: 'layui-layer-demo', //样式类名
+                    closeBtn: 1, //不显示关闭按钮
+                    area: ['510px', '300px'],
+                    anim: 2,
+                    shadeClose: true, //开启遮罩关闭
+                    content: ed
+                });
+            })
+
+        }
+    };
+
+    Addlable = function () {
+        //prompt层
+        layer.prompt({ title: '输入标签名称，如：qrcode', formType: 0 }, function (pass, index) {
+            layer.close(index);
+            layer.prompt({ title: '请输入标签说明', formType: 2 }, function (text, index) {
+                layer.close(index);
+
+                //layer.msg('演示完毕！您的口令：' + pass + '您最后写下了：' + text);
+                Ajax.s2(pass, text);
+            });
+        });
+    }
+    Editlable = function (obj) {
+        var edit = $("#editid").val();
+        var name = $("#Edit_name").val();
+        var value = $("#Edit_des").val();
+        Ajax.post("/SystemSet/AddLableRoleEditaction", { Sid: edit, Name: name, Des: value }, function (data) 
+        {
+            if ($.parseJSON(data).result) {
+                layer.alert("修改成功",function() {
+                    location.reload();
+                });
+            }
+
+        });
+        console.log($("#editid").val());
+    }
+    Ajax = {
+        get: function (url, fun) {
+            $.get(url, fun);
+        },
+        post: function (url, data, fun) {
+            $.post(url, data, fun);
+        },
+        s2: function (pass, text) {//保存
+            var data = { Name: pass, Des: text }
+            $.post("/SystemSet/AddLableRoleaction", data, function (datas) {
+                datas = $.parseJSON(datas).result;
+                console.log(datas);
+                if (datas) {
+                    layer.alert("添加成功",function() {
+                        location.reload();
+                    });
+                }
+                
+            });
+          
+        }
+    };
+
+</script>

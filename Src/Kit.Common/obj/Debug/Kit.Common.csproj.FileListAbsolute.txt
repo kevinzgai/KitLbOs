@@ -1,0 +1,17 @@
+D:\Src\trunk\Kit\Common\bin\Debug\Kit.Common.dll
+D:\Src\trunk\Kit\Common\bin\Debug\Kit.Common.pdb
+D:\Src\trunk\Kit\Common\bin\Debug\COM.Excel.dll
+D:\Src\trunk\Kit\Common\bin\Debug\Excel.dll
+D:\Src\trunk\Kit\Common\bin\Debug\OpenSmtp.dll
+D:\Src\trunk\Kit\Common\bin\Debug\OWC10Chart.dll
+D:\Src\trunk\Kit\Common\obj\Debug\Kit.Common.csprojResolveAssemblyReference.cache
+D:\Src\trunk\Kit\Common\obj\Debug\Kit.Common.dll
+D:\Src\trunk\Kit\Common\obj\Debug\Kit.Common.pdb
+E:\LableOs\trunk\Kit\Kit.Common\bin\Debug\Kit.Common.dll
+E:\LableOs\trunk\Kit\Kit.Common\bin\Debug\Kit.Common.pdb
+E:\LableOs\trunk\Kit\Kit.Common\bin\Debug\Kit.Model.dll
+E:\LableOs\trunk\Kit\Kit.Common\bin\Debug\System.Web.Mvc.resources.dll
+E:\LableOs\trunk\Kit\Kit.Common\bin\Debug\Kit.Model.pdb
+E:\LableOs\trunk\Kit\Kit.Common\obj\Debug\Kit.Common.csprojResolveAssemblyReference.cache
+E:\LableOs\trunk\Kit\Kit.Common\obj\Debug\Kit.Common.dll
+E:\LableOs\trunk\Kit\Kit.Common\obj\Debug\Kit.Common.pdb

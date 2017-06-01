@@ -1,0 +1,6 @@
+E:\LableOs\trunk\Kit\Kit.Model\bin\Release\Kit.Model.dll
+E:\LableOs\trunk\Kit\Kit.Model\obj\Release\Kit.Model.csprojResolveAssemblyReference.cache
+E:\LableOs\trunk\Kit\Kit.Model\obj\Release\Kit.Model.dll
+D:\Src\trunk\Kit\Kit.Model\bin\Release\Kit.Model.dll
+D:\Src\trunk\Kit\Kit.Model\obj\Release\Kit.Model.csprojResolveAssemblyReference.cache
+D:\Src\trunk\Kit\Kit.Model\obj\Release\Kit.Model.dll
